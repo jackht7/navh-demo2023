@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import { FlexBoxCol, FlexBoxRow } from './components/styled/styled';
 import { MetamaskButton } from './components/MetamaskConnect';
+import Routes from './routes';
+import { ThemeCustomization } from './themes';
 import './App.css';
 
 const StyledApp = styled.div`
@@ -16,14 +18,17 @@ const AppContainer = styled.div`
 
 export const App = () => {
   return (
-    <StyledApp>
-      <AppContainer>
-        <FlexBoxCol>
-          <FlexBoxRow>
-            <MetamaskButton />
-          </FlexBoxRow>
-        </FlexBoxCol>
-      </AppContainer>
-    </StyledApp>
+    // <StyledApp>
+    //   <AppContainer>
+    //     <FlexBoxCol>
+    //       <FlexBoxRow>
+    //         <MetamaskButton />
+    //       </FlexBoxRow>
+    //     </FlexBoxCol>
+    //   </AppContainer>
+    // </StyledApp>
+    <ThemeCustomization>
+      <Routes />
+    </ThemeCustomization>
   );
 };

@@ -3,7 +3,7 @@ import Alert from '@mui/material/Alert';
 
 import { useMetaMask } from '~/hooks/useMetaMask';
 import { formatAddress, formatChainAsNum } from '~/utils';
-import { config, isSupportedNetwork } from '~/lib/config';
+import { config, isSupportedNetwork } from '~/lib/networkConfig';
 import { Button } from '~/components/styled/styled';
 import styles from './MetamaskConnect.module.css';
 
@@ -35,7 +35,7 @@ export const MetamaskButton = () => {
     // <div className={styles.flexContainer}>
     <>
       {!walletChainSupported && (
-        <Alert severity='info'>Switch to LineaGoerli</Alert>
+        <Alert severity="info">Switch to LineaGoerli</Alert>
       )}
 
       <div className={styles.rightNav}>
@@ -48,8 +48,8 @@ export const MetamaskButton = () => {
               {walletChainSupported && (
                 <a
                   href={`${chainInfo?.blockExplorer}/address/${chainInfo?.contractAddress}`}
-                  target='_blank'
-                  title='Open in Block Explorer'
+                  target="_blank"
+                  title="Open in Block Explorer"
                 >
                   {chainInfo.name}
                 </a>
@@ -57,8 +57,8 @@ export const MetamaskButton = () => {
               &nbsp;|&nbsp;
               <a
                 href={`https://etherscan.io/address/${wallet}`}
-                target='_blank'
-                title='Open in Block Explorer'
+                target="_blank"
+                title="Open in Block Explorer"
               >
                 {formatAddress(wallet.address)}
               </a>
