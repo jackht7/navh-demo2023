@@ -7,7 +7,12 @@ import {
   useContext,
   useCallback,
 } from 'react';
-import { EventType, MetaMaskSDK, SDKProvider } from '@metamask/sdk';
+import {
+  EventType,
+  MetaMaskSDK,
+  SDKProvider,
+  CommunicationLayerPreference,
+} from '@metamask/sdk';
 import _ from 'underscore';
 
 import { formatBalance } from '~/utils';
@@ -153,6 +158,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const terminate = () => {
+    // TODO: logout
     sdk?.terminate();
   };
 

@@ -1,49 +1,38 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
-  Avatar,
   Badge,
   Box,
   ClickAwayListener,
-  Divider,
   IconButton,
-  List,
-  ListItemButton,
-  ListItemAvatar,
-  ListItemText,
-  ListItemSecondaryAction,
   Paper,
   Popper,
-  Typography,
   useMediaQuery,
 } from '@mui/material';
+import { BellOutlined, CloseOutlined } from '@ant-design/icons';
 
 import MainCard from '~/components/MainCard';
 import Transitions from '~/components/@extended/Transitions';
-import {
-  BellOutlined,
-  CloseOutlined,
-  GiftOutlined,
-  MessageOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
 import { ThemeType } from '~/themes';
+import { useMetaMask } from '~/hooks/useMetaMask';
+import { isSupportedNetwork } from '~/lib/networkConfig';
+import NotificationList from './NotificationList';
 
 const avatarSX = {
   width: 36,
   height: 36,
   fontSize: '1rem',
 };
-
 const actionSX = {
   mt: '6px',
   ml: 1,
   top: 'auto',
   right: 'auto',
   alignSelf: 'flex-start',
-
   transform: 'none',
 };
+const iconBackColorOpen = 'grey.300';
+const iconBackColor = 'grey.100';
 
 const Notification = () => {
   const theme = useTheme() as ThemeType;
@@ -51,10 +40,55 @@ const Notification = () => {
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  // TODO: fetch notifications instead of using state
+  const [notificationList, setNotificationList] = useState([]);
+
+  // TODO: move to useMetaMask() hook
+  const { wallet } = useMetaMask();
+  const lineaTestnetId = import.meta.env.VITE_PUBLIC_NETWORK_ID;
+  const walletChainSupported = isSupportedNetwork(wallet.chainId);
+
+  const switchNetwork = async () => {
+    if (walletChainSupported) return;
+
+    await window.ethereum?.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: lineaTestnetId }],
+    });
+  };
+
+  // now chainInfo is strongly typed or fallback to linea if not a valid chain
+  useEffect(() => {
+    if (isSupportedNetwork(wallet.chainId) || wallet.accounts.length == 0) {
+      setNotificationList([]);
+    } else {
+      const [weekday, monthDay, year, hourMin] = new Date()
+        .toLocaleDateString('en-US', {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+        })
+        .split(',');
+
+      setNotificationList([
+        {
+          message: 'Switch to default network LineaGoerli',
+          colour: 'error',
+          type: 'warn',
+          time: `${weekday.trim()}, ${monthDay.trim()} ${year.trim()}, ${hourMin.trim()}`,
+          action: switchNetwork,
+        },
+      ]);
+    }
+  }, [wallet.chainId]);
+
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -62,8 +96,9 @@ const Notification = () => {
     setOpen(false);
   };
 
-  const iconBackColorOpen = 'grey.300';
-  const iconBackColor = 'grey.100';
+  useEffect(() => {
+    if (notificationList.length == 0) setOpen(false);
+  }, [notificationList]);
 
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
@@ -80,9 +115,14 @@ const Notification = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={4} color="primary">
+        {wallet.accounts.length > 0 && notificationList.length > 0 && (
+          <Badge badgeContent={notificationList.length} color="primary">
+            <BellOutlined />
+          </Badge>
+        )}
+        {(wallet.accounts.length == 0 || notificationList.length == 0) && (
           <BellOutlined />
-        </Badge>
+        )}
       </IconButton>
       <Popper
         placement={matchesXs ? 'bottom' : 'bottom-end'}
@@ -127,152 +167,11 @@ const Notification = () => {
                     </IconButton>
                   }
                 >
-                  <List
-                    component="nav"
-                    sx={{
-                      p: 0,
-                      '& .MuiListItemButton-root': {
-                        py: 0.5,
-                        '& .MuiAvatar-root': avatarSX,
-                        '& .MuiListItemSecondaryAction-root': {
-                          ...actionSX,
-                          position: 'relative',
-                        },
-                      },
-                    }}
-                  >
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'success.main',
-                            bgcolor: 'success.lighter',
-                          }}
-                        >
-                          <GiftOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            It&apos;s{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Cristina danny&apos;s
-                            </Typography>{' '}
-                            birthday today.
-                          </Typography>
-                        }
-                        secondary="2 min ago"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          3:00 AM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'primary.main',
-                            bgcolor: 'primary.lighter',
-                          }}
-                        >
-                          <MessageOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Aida Burg
-                            </Typography>{' '}
-                            commented your post.
-                          </Typography>
-                        }
-                        secondary="5 August"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          6:00 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'error.main',
-                            bgcolor: 'error.lighter',
-                          }}
-                        >
-                          <SettingOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            Your Profile is Complete &nbsp;
-                            <Typography component="span" variant="subtitle1">
-                              60%
-                            </Typography>{' '}
-                          </Typography>
-                        }
-                        secondary="7 hours ago"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          2:45 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'primary.main',
-                            bgcolor: 'primary.lighter',
-                          }}
-                        >
-                          C
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Cristina Danny
-                            </Typography>{' '}
-                            invited to join{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Meeting.
-                            </Typography>
-                          </Typography>
-                        }
-                        secondary="Daily scrum meeting time"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          9:10 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton
-                      sx={{ textAlign: 'center', py: `${12}px !important` }}
-                    >
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6" color="primary">
-                            View All
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
-                  </List>
+                  {notificationList.length > 0 && (
+                    <NotificationList
+                      items={notificationList}
+                    ></NotificationList>
+                  )}
                 </MainCard>
               </ClickAwayListener>
             </Paper>
