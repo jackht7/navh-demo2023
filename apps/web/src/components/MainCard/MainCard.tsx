@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { forwardRef, ForwardRef } from 'react';
+import { forwardRef } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
   Card,
@@ -35,7 +35,7 @@ type Props = {
 //  interim workaround to insert ref into Card
 const StyledCard = styled(Card)``;
 
-const MainCard = forwardRef<ForwardRef<HTMLElement>, Props>(
+const MainCard = forwardRef<HTMLDivElement, Props>(
   (
     {
       border = true,

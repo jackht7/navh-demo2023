@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { forwardRef, useEffect, ForwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
@@ -38,7 +38,7 @@ const NavItem = ({ item, level }) => {
 
   // TODO: move this component definition out of the parent component
   let listItemProps = {
-    component: forwardRef<ForwardRef<HTMLElement>, any>((props, ref) => (
+    component: forwardRef<HTMLElement, any>((props, ref) => (
       <Link ref={ref} {...props} to={item.url} target={itemTarget} />
     )),
   } as unknown as Props;

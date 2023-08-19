@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { forwardRef, ForwardRef } from 'react';
+import { forwardRef } from 'react';
 import { Fade, Box, Grow } from '@mui/material';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   [x: string]: any;
 };
 
-const Transitions = forwardRef<ForwardRef<HTMLElement>, Props>(
+const Transitions = forwardRef<HTMLElement, Props>(
   ({ children, position, type, ...others }, ref) => {
     let positionSX = {
       transformOrigin: '0 0 0',

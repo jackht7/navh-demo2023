@@ -8,8 +8,9 @@ import {
   useCallback,
 } from 'react';
 import { EventType, MetaMaskSDK, SDKProvider } from '@metamask/sdk';
-import { formatBalance } from '~/utils';
 import _ from 'underscore';
+
+import { formatBalance } from '~/utils';
 
 interface WalletState {
   accounts: any[];
