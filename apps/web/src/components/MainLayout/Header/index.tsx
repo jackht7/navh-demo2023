@@ -51,7 +51,10 @@ const Header = ({ open, handleDrawerToggle }) => {
           open={open}
           position="fixed"
           color="inherit"
-          sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
+          elevation={0}
+          sx={{
+            borderBottom: `1px solid ${theme.palette.divider}`,
+          }}
         >
           {mainHeader}
         </AppBarStyled>
@@ -59,7 +62,10 @@ const Header = ({ open, handleDrawerToggle }) => {
         <AppBar
           position="fixed"
           color="inherit"
-          sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
+          elevation={0}
+          sx={{
+            borderBottom: `1px solid ${theme.palette.divider}`,
+          }}
         >
           {mainHeader}
         </AppBar>

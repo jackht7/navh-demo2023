@@ -67,7 +67,7 @@ const MainCard = forwardRef<HTMLDivElement, Props>(
           borderColor:
             theme.palette.mode === 'dark'
               ? theme.palette.divider
-              : theme.palette.grey[800],
+              : theme.palette.grey[300],
           boxShadow:
             boxShadow && (!border || theme.palette.mode === 'dark')
               ? shadow || theme.customShadows.z1

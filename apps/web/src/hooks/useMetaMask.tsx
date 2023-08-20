@@ -7,12 +7,7 @@ import {
   useContext,
   useCallback,
 } from 'react';
-import {
-  EventType,
-  MetaMaskSDK,
-  SDKProvider,
-  CommunicationLayerPreference,
-} from '@metamask/sdk';
+import { EventType, MetaMaskSDK } from '@metamask/sdk';
 import _ from 'underscore';
 
 import { formatBalance } from '~/utils';
