@@ -8,7 +8,8 @@
     "build": "tsc && npx vite build",
     "preview": "npx vite preview",
     "lint": "eslint .",
-    "lint:fix": "npm run lint --fix"
+    "lint:fix": "npm run lint --fix",
+    "postinstall": "node ../blockchain/scripts/generate_types.js"
   },
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
