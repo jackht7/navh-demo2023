@@ -13,25 +13,18 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import NumberFormat from 'react-number-format';
 
 import Dot from '~/components/@extended/Dot';
 
-function createData(trackingNo, name, fat, carbs, protein) {
-  return { trackingNo, name, fat, carbs, protein };
+function createData(trackingNo, name, order, status, amount) {
+  return { trackingNo, name, order, status, amount };
 }
 
 const rows = [
-  createData(84564564, 'Camera Lens', 40, 2, 40570),
-  createData(98764564, 'Laptop', 300, 0, 180139),
-  createData(98756325, 'Mobile', 355, 1, 90989),
-  createData(98652366, 'Handset', 50, 1, 10239),
-  createData(13286564, 'Computer Accessories', 100, 1, 83348),
-  createData(86739658, 'TV', 99, 0, 410780),
-  createData(13256498, 'Keyboard', 125, 2, 70999),
-  createData(98753263, 'Mouse', 89, 2, 10570),
-  createData(98753275, 'Desktop', 185, 1, 98063),
-  createData(98753291, 'Chair', 100, 0, 14001),
+  createData(84564564, 'Site-A Column-11', 40, 2, 40570),
+  createData(98764564, 'Site-B Slab-45', 300, 0, 180139),
+  createData(98756325, 'Block-12', 355, 1, 90989),
+  createData(98652366, 'Retaining Wall-12', 50, 1, 10239),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -78,30 +71,30 @@ const headCells = [
     id: 'name',
     align: 'left' as const,
     disablePadding: true,
-    label: 'Product Name',
+    label: 'Report Name',
   },
   {
-    id: 'fat',
+    id: 'order',
     align: 'right' as const,
     disablePadding: false,
     label: 'Total Order',
   },
   {
-    id: 'carbs',
+    id: 'status',
     align: 'left' as const,
     disablePadding: false,
 
     label: 'Status',
   },
   {
-    id: 'protein',
+    id: 'amount',
     align: 'right' as const,
     disablePadding: false,
     label: 'Total Amount',
   },
 ];
 
-function OrderTableHead({ order, orderBy }) {
+function ReportTableHead({ order, orderBy }) {
   return (
     <TableHead>
       <TableRow>
@@ -120,7 +113,7 @@ function OrderTableHead({ order, orderBy }) {
   );
 }
 
-OrderTableHead.propTypes = {
+ReportTableHead.propTypes = {
   order: PropTypes.string,
   orderBy: PropTypes.string,
 };
@@ -159,7 +152,7 @@ OrderStatus.propTypes = {
   status: PropTypes.number,
 };
 
-export default function OrderTable() {
+export default function ReportTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -189,7 +182,7 @@ export default function OrderTable() {
             },
           }}
         >
-          <OrderTableHead order={order} orderBy={orderBy} />
+          <ReportTableHead order={order} orderBy={orderBy} />
           <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
@@ -217,11 +210,11 @@ export default function OrderTable() {
                       </Link>
                     </TableCell>
                     <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
+                    <TableCell align="right">{row.order}</TableCell>
                     <TableCell align="left">
-                      <OrderStatus status={row.carbs} />
+                      <OrderStatus status={row.status} />
                     </TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.amount}</TableCell>
                   </TableRow>
                 );
               }

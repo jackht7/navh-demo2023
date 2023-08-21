@@ -34,3 +34,4 @@ yarn-error.log*
 .env
 
 /apps/web/src/lib/contract-abis/*
+/apps/blockchain/typechain
