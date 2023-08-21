@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
@@ -15,17 +15,24 @@ import {
 } from '@mui/material';
 
 import Dot from '~/components/@extended/Dot';
+import { TicketFormatted } from '../dashboard';
 
 function createData(trackingNo, name, order, status, amount) {
   return { trackingNo, name, order, status, amount };
 }
 
-const rows = [
+let rows = [
   createData(84564564, 'Site-A Column-11', 40, 2, 40570),
   createData(98764564, 'Site-B Slab-45', 300, 0, 180139),
   createData(98756325, 'Block-12', 355, 1, 90989),
   createData(98652366, 'Retaining Wall-12', 50, 1, 10239),
 ];
+
+const getRandomInt = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -152,10 +159,29 @@ OrderStatus.propTypes = {
   status: PropTypes.number,
 };
 
-export default function ReportTable() {
+export default function ReportTable(props: { collection: TicketFormatted[] }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
+  const [reports, setReports] = useState([]);
+
+  // TODO: create entries via form
+  useEffect(() => {
+    const arr = Array.from(props.collection);
+    const list = [];
+    arr.forEach((nft: { tokenId: string }) => {
+      list.push(
+        createData(
+          Number(nft.tokenId),
+          `Site-A Column-${getRandomInt(1, 50)}`,
+          40,
+          Number(`${getRandomInt(0, 2)}`),
+          `${getRandomInt(1, 10000)}`
+        )
+      );
+    });
+    setReports((oldArray) => [...oldArray, ...list]);
+  }, [props.collection]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
@@ -184,6 +210,39 @@ export default function ReportTable() {
         >
           <ReportTableHead order={order} orderBy={orderBy} />
           <TableBody>
+            {reports.map((row, index) => {
+              const isItemSelected = isSelected(row.trackingNo);
+              const labelId = `enhanced-table-checkbox-${index}`;
+
+              return (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={row.trackingNo}
+                  selected={isItemSelected}
+                >
+                  <TableCell
+                    component="th"
+                    id={labelId}
+                    scope="row"
+                    align="left"
+                  >
+                    <Link color="secondary" component={RouterLink} to="">
+                      {row.trackingNo}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align="right">{row.order}</TableCell>
+                  <TableCell align="left">
+                    <OrderStatus status={row.status} />
+                  </TableCell>
+                  <TableCell align="right">{row.amount}</TableCell>
+                </TableRow>
+              );
+            })}
             {stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
                 const isItemSelected = isSelected(row.trackingNo);
