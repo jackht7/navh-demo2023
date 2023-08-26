@@ -86,16 +86,16 @@ const DashboardDefault = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       pollMessage(setUpdateId).then((messages) => {
-        if (messages.length != photoListLength.current) {
-          messages.forEach(async (object) => {
+        if (photoListLength.current != messages?.length) {
+          const files = [];
+          const promises = messages?.map(async (object) => {
             const fileId = object.message.photo.pop().file_id;
             const file = await getFile(fileId);
-
-            while (photoListLength.current < messages.length) {
-              setPhotos((oldArray) => [...oldArray, file]);
-              photoListLength.current++;
-            }
+            files.push(file);
           });
+
+          Promise.all(promises).then(() => setPhotos(files));
+          photoListLength.current = messages.length;
         }
       });
     }, 5000);

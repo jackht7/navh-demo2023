@@ -5,7 +5,7 @@ export const pollMessage = async (setUpdateId, offset = undefined) => {
     const res = (await (await fetch(`/api/getUpdates?offset=${offset}`)).json())
       .result;
 
-    const messagesWithPhoto = res.filter((obj) => obj.message.photo);
+    const messagesWithPhoto = res.filter((obj) => obj.message?.photo);
     return messagesWithPhoto;
   } catch (e) {
     console.error('Unable to fetch getUpdates from Telegram Bot');

@@ -21,7 +21,7 @@
 - Go to [web](./apps/web/) folder and run frontend React loaclly.
 
 ```bash
-cd ./app/web
+cd ./apps/web
 npm run dev
 ```
 
